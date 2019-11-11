@@ -6,12 +6,12 @@ import re
 import sys
 
 def check_negative_cases(line, imported):
-  return re.match('using \w+::{0};'.format(imported), line) or re.match('^(\/\/)', line)
+  return re.match('using \w+::{0};'.format(imported), line) or re.match('^( )*(\t)*(\/\/)', line)
 
 
 def do_exist(file_name, lines, imported):
-  if not any(not check_negative_cases(line, imported) and
-             re.search('(\b{0}\b)'.format(imported), line) for line in lines):
+  if not any((not check_negative_cases(line, imported)) and
+             re.search(r'(\b{0}\b)'.format(imported), line) for line in lines):
     print('File "{0}" does not use "{1}"'.format(file_name, imported))
     return False
   return True
@@ -42,4 +42,4 @@ def is_valid(file_name):
   else:
     return valid
 
-sys.exit(0 if all(map(is_valid, glob.iglob('src/*.cc'))) else 1)
+sys.exit(0 if all(map(is_valid, glob.iglob('../src/*.cc'))) else 1)
